@@ -2,7 +2,7 @@ from mongoengine import *
 from mongoengine.context_managers import switch_collection
 
 PASSWORD = 'arik'
-URL = f"mongodb+srv://kira:{PASSWORD}@cluster0.ujw7r.mongodb.net/FantasyCricket?retryWrites=true&w=majority"
+URL = f"mongodb+srv://kira:{PASSWORD}@cluster0.fubyi.mongodb.net/fantasy?retryWrites=true&w=majority"
 
 
 class Stat(Document):
@@ -51,11 +51,11 @@ class GameDataModel():
                     batsmen[stat.player] = stat.value
         return batsmen
 
-    def getTeams(self, steam=None):
-        if steam:
+    def getTeams(self, t_team=None):
+        if t_team:
             with switch_collection(Team, 'teams'):
                 for team in Team.objects():
-                    if team["name"] == steam:
+                    if team["name"] == t_team:
                         return team
         teams = []
         with switch_collection(Team, 'teams'):
@@ -72,7 +72,6 @@ class GameDataModel():
 
     def addStats(self, data):
         with switch_collection(Stat, 'stats') as stat:
-            print(data[0])
             stat = Stat(player=data[0],
                         matches=data[13],
                         runs=data[14],
@@ -107,3 +106,4 @@ class GameDataModel():
         with switch_collection(Team, 'teams') as team:
             team = Team(name=name, players=players, value=value)
             team.save()
+
